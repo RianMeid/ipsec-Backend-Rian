@@ -4,6 +4,7 @@
 
 import DAO.CartDao;
 import resources.CartResource;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import resources.LoginService;
 import io.dropwizard.Application;
 import io.dropwizard.bundles.assets.ConfiguredAssetsBundle;
@@ -43,7 +44,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     ErrorPageErrorHandler errorHandler = new ErrorPageErrorHandler();
     errorHandler.addErrorPage(404, "/");
     environment.getApplicationContext().setErrorHandler(errorHandler);
-
+    environment.servlets().addFilter("CORS", CrossOriginFilter.class).setInitParameter("allowedOrigins", "*");
     environment.healthChecks().register("template", healthCheck);
     final LoginService loginService = new LoginService();
 
