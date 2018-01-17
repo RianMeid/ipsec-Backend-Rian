@@ -5,6 +5,7 @@ import DAO.JDBC;
 import DAO.UserDao;
 import Models.ArrayCartModel;
 import Models.CartModel;
+import Models.CartModelUpdate;
 import Models.UserModel;
 import com.google.inject.Singleton;
 import services.CartService;
@@ -58,7 +59,58 @@ public class CartResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed("GUEST")
     @Path("/getallPurchase")
-    public List<ArrayCartModel> findAllPurchases() {
-        return service.findAllPurchases();
+    public List<ArrayCartModel> findAllPurchases(@Valid CartModel cartModel) throws SQLException {
+        JDBC jdbc = new JDBC();
+        CartDao cartDao = new CartDao();
+        UserDao userDao = new UserDao(jdbc.getConnection());
+        UserModel userModel = new UserModel();
+        userModel.setEmail(cartModel.getLogin());
+        userModel.setPassword(cartModel.getPassword());
+        if (userDao.getLogin(userModel).isadmin){
+            return service.findAllPurchases();
+
+        }else {
+            return null;
+        }
+
+    }
+
+    @PUT
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed("GUEST")
+    @Path("/Purchase")
+    public void putPurchase(@Valid CartModelUpdate cartModel) throws SQLException {
+        System.out.println((cartModel.getLogin()));
+
+        JDBC jdbc = new JDBC();
+        CartDao cartDao = new CartDao();
+        UserDao userDao = new UserDao(jdbc.getConnection());
+        UserModel userModel = new UserModel();
+        userModel.setEmail(cartModel.getLogin());
+        userModel.setPassword(cartModel.getPassword());
+        if (userDao.getLogin(userModel).loggedin){
+            cartDao.putCart(cartModel);
+            System.out.println((cartModel.getLogin()));
+
+        };
+}
+    @DELETE
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed("GUEST")
+    @Path("/Purchase")
+    public void deletePurchase(@Valid CartModel cartModel) throws SQLException {
+        System.out.println((cartModel.getLogin()));
+
+        JDBC jdbc = new JDBC();
+        CartDao cartDao = new CartDao();
+        UserDao userDao = new UserDao(jdbc.getConnection());
+        UserModel userModel = new UserModel();
+        userModel.setEmail(cartModel.getLogin());
+        userModel.setPassword(cartModel.getPassword());
+        if (userDao.getLogin(userModel).loggedin){
+            cartDao.deleteCart(cartModel);
+            System.out.println((cartModel.getLogin()));
+
+        };
     }
 }

@@ -24,7 +24,7 @@ public class JDBC {
              * Hiermee wordt de PostgreSQL driver geladen.
              */
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/webEDU","postgres","starwars");
+            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/postgres","postgres","password");
         } catch (ClassNotFoundException e) {
             System.out.println(e);
         } catch (SQLException e) {

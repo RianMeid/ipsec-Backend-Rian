@@ -2,7 +2,9 @@ package DAO;
 
 import Models.LoginModel;
 import Models.UserModel;
+import Models.UserModelUpdate;
 import lombok.val;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +19,8 @@ public class UserDao {
 
     PreparedStatement getLogin;
     PreparedStatement setUser;
+    PreparedStatement updateUser;
+    PreparedStatement deleteUser;
 
     public UserDao(Connection connection) throws SQLException{
         this.connection = connection;
@@ -31,6 +35,12 @@ public class UserDao {
         "?,"+
         "?,"+
         "?);");
+
+        updateUser = connection.prepareStatement("UPDATE  users SET username = ?, userpassword = ?, admin = ? WHERE "+
+        " username = ?, userpassword = ?, admin = ?;");
+
+        deleteUser = connection.prepareStatement("DELETE FROM users WHERE "+
+        " username = ?, userpassword = ?, admin = ?;");
     }
     public LoginModel getLogin (UserModel userModel) throws SQLException{
 
@@ -53,5 +63,22 @@ public class UserDao {
         setUser.executeUpdate();
 
 
+    }
+    public void updateUser (UserModelUpdate userModel) throws SQLException {
+        updateUser.setString(1,userModel.getNewemail());
+        updateUser.setString(2,userModel.getNewpassword());
+        updateUser.setBoolean(3,false);
+        updateUser.setString(4,userModel.getEmail());
+        updateUser.setString(5,userModel.getPassword());
+        updateUser.setBoolean(6,false);
+        updateUser.executeUpdate();
+
+
+    }
+    public void deleteUser (UserModel userModel) throws SQLException {
+        deleteUser.setString(1,userModel.getEmail());
+        deleteUser.setString(2,userModel.getPassword());
+        deleteUser.setBoolean(3,false);
+        deleteUser.executeUpdate();
     }
 }

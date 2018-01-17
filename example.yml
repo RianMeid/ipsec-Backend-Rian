@@ -3,4 +3,4 @@ defaultName: Stranger
 server:
   applicationConnectors:
     - type: http
-      port: 4201
+      port: 4202
